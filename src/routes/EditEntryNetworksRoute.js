@@ -1,3 +1,4 @@
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useLocation, useParams } from 'react-router-dom';
 import { Pane } from '@folio/stripes/components';

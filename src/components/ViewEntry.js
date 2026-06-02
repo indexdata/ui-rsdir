@@ -22,7 +22,7 @@ const ViewEntry = ({ entry, closePath }) => {
   const close = useCloseDirect(closePath || upNLevels(location, 2));
 
   const handleEdit = () => {
-    history.push(`/rsdir/entries/edit/${entry.id}`);
+    history.push(`/rsdir/entries/edit/${entry.id}${location.search}`);
   };
 
   const handleLMSEdit = () => {

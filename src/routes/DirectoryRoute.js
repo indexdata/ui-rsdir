@@ -12,6 +12,7 @@ import EntryPointsRoute from './EntryPointsRoute';
 import NetworksRoute from './NetworksRoute';
 import EditNetworkRoute from './EditNetworkRoute';
 import TiersRoute from './TiersRoute';
+import EditTierRoute from './EditTierRoute';
 
 const tabBarStyle = {
   borderBottom: '1px solid #d8d8d8',
@@ -80,7 +81,10 @@ const DirectoryRoute = ({ match: { path } }) => {
           <Route path={`${path}/networks/create`} component={EditNetworkRoute} />
           <Route path={`${path}/networks/edit/:id`} component={EditNetworkRoute} />
         </Route>
-        <Route path={`${path}/tiers`} component={TiersRoute} />
+        <Route path={`${path}/tiers`} component={TiersRoute}>
+          <Route path={`${path}/tiers/create`} component={EditTierRoute} />
+          <Route path={`${path}/tiers/edit/:id`} component={EditTierRoute} />
+        </Route>
       </Switch>
     </>
   );

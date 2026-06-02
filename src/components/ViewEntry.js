@@ -15,18 +15,26 @@ import {
 } from '@folio/stripes/components';
 import { useCloseDirect, upNLevels } from '@projectreshare/stripes-reshare';
 
-const ViewEntry = ({ entry }) => {
+const ViewEntry = ({ entry, closePath }) => {
   const location = useLocation();
   const history = useHistory();
   const intl = useIntl();
-  const close = useCloseDirect(upNLevels(location, 2));
+  const close = useCloseDirect(closePath || upNLevels(location, 2));
 
   const handleEdit = () => {
     history.push(`/rsdir/entries/edit/${entry.id}`);
   };
 
   const handleLMSEdit = () => {
-    history.push(`/rsdir/entries/lmsconfig/edit/${entry.id}`);
+    history.push(`/rsdir/entries/lmsconfig/edit/${entry.id}${location.search}`);
+  };
+
+  const handleNetworksEdit = () => {
+    history.push(`/rsdir/entries/networks/edit/${entry.id}${location.search}`);
+  };
+
+  const handleTiersEdit = () => {
+    history.push(`/rsdir/entries/tiers/edit/${entry.id}${location.search}`);
   };
 
   const formatSymbols = (symbols) => {
@@ -355,12 +363,24 @@ const ViewEntry = ({ entry }) => {
                 label={<FormattedMessage id="ui-rsdir.entry.networks" />}
                 value={formatNetworks(entry.networks)}
               />
+              <Button
+                id="clickable-edit-entry-networks"
+                onClick={handleNetworksEdit}
+              >
+                <FormattedMessage id="ui-rsdir.networks.edit" />
+              </Button>
             </Col>
             <Col xs={4}>
               <KeyValue
                 label={<FormattedMessage id="ui-rsdir.entry.tiers" />}
                 value={formatTiers(entry.tiers)}
               />
+              <Button
+                id="clickable-edit-entry-tiers"
+                onClick={handleTiersEdit}
+              >
+                <FormattedMessage id="ui-rsdir.tiers.edit" />
+              </Button>
             </Col>
           </Row>
           { entry.addresses &&

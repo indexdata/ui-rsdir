@@ -97,7 +97,7 @@ const Entries = ({
           isEmptyMessage={intl.formatMessage({ id: 'stripes-smart-components.sas.noResults.noTerms' })}
           loading={entriesQuery.isFetching}
           onNeedMoreData={fetchMore}
-          onRowClick={(_e, rowData) => history.push(`${match.url}/view/${rowData.id}${location.search}`)}
+          onRowClick={(_e, rowData) => history.push(`${match.url}/entry-points/${rowData.id}${location.search}`)}
           pageAmount={perPage}
           pagingType={MCLPagingTypes.PREV_NEXT}
           totalCount={totalCount}

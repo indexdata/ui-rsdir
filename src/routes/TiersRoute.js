@@ -5,7 +5,7 @@ import RestResourceManager from '../components/RestResourceManager';
 const fields = [
   {
     name: 'name',
-    displayName: 'Name',
+    displayName: 'ui-rsdir.tier.name',
     fieldType: 'string',
     listingField: true,
     required: true,

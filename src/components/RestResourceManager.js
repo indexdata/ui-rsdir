@@ -88,7 +88,7 @@ const modifiedValuesForSubmit = (values, fields, dirtyFields) => fields.reduce((
 const renderField = field => {
   const type = normalizeType(field.fieldType);
   const commonProps = {
-    label: field.displayName,
+    label: <FormattedMessage id={field.displayName} />,
     required: field.required,
     validate: field.required ? requiredResourceValue : undefined,
   };
@@ -365,7 +365,7 @@ const RestResourceManager = ({
         <MultiColumnList
           autosize
           columnMapping={{
-            [listingField.name]: listingField.displayName,
+            [listingField.name]: intl.formatMessage({ id: listingField.displayName }),
           }}
           contentData={sparseRecords}
           formatter={listFormatter}

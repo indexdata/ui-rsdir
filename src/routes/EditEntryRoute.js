@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Form } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { useMutation, useQueryClient } from 'react-query';
-import { Prompt, useParams, useHistory } from 'react-router-dom';
+import { Prompt, useParams, useHistory, useLocation } from 'react-router-dom';
 import { Button, Pane, Paneset, PaneFooter, KeyValue } from '@folio/stripes/components';
 import { CalloutContext, useOkapiKy } from '@folio/stripes/core';
 import { useCloseDirect, useOkapiQuery } from '@projectreshare/stripes-reshare';
@@ -16,13 +16,15 @@ const EDIT = 'edit';
 const EditEntryRoute = () => {
   const { id } = useParams();
   const history = useHistory();
+  const location = useLocation();
   const callout = useContext(CalloutContext);
   const queryClient = useQueryClient();
   const okapiKy = useOkapiKy();
 
   const op = id ? EDIT : CREATE;
 
-  const close = useCloseDirect(op === CREATE ? '/rsdir/entries' : `/rsdir/entries/view/${id}`);
+  // const close = useCloseDirect(op === CREATE ? '/rsdir/entries' : `/rsdir/entries/view/${id}`);
+  const close = useCloseDirect(op === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}${location.search}`);
 
   const entryQuery = useOkapiQuery(`rsdir/entries/by-id/${id}`, {
     staleTime: 2 * 60 * 1000,

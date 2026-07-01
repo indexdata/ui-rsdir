@@ -17,6 +17,11 @@ const CREATE = 'create';
 const EDIT = 'edit';
 const tiersPath = 'rsdir/tiers';
 const tierPath = id => `${tiersPath}/${id}`;
+const defaultTierValues = {
+  level: 'standard',
+  type: 'loan',
+  cost: 0.0,
+};
 
 const EditTierRoute = () => {
   const { id } = useParams();
@@ -121,7 +126,7 @@ const EditTierRoute = () => {
 
   if (op === EDIT && !tierQuery.isSuccess) return null;
 
-  const initialValues = op === CREATE ? {} : tierQuery.data;
+  const initialValues = op === CREATE ? defaultTierValues : { ...defaultTierValues, ...tierQuery.data };
 
   const submit = (values, form) => {
     if (op === CREATE) {

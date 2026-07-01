@@ -17,6 +17,7 @@ const CREATE = 'create';
 const EDIT = 'edit';
 const networksPath = 'rsdir/networks';
 const networkPath = id => `${networksPath}/${id}`;
+const defaultNetworkValues = { priority: 0.0 };
 
 const EditNetworkRoute = () => {
   const { id } = useParams();
@@ -121,7 +122,7 @@ const EditNetworkRoute = () => {
 
   if (op === EDIT && !networkQuery.isSuccess) return null;
 
-  const initialValues = op === CREATE ? {} : networkQuery.data;
+  const initialValues = op === CREATE ? defaultNetworkValues : { ...defaultNetworkValues, ...networkQuery.data };
 
   const submit = (values, form) => {
     if (op === CREATE) {

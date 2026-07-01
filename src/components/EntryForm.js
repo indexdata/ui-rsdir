@@ -45,7 +45,7 @@ const ParentField = () => {
   const { values } = useFormState({ subscription: { values: true } });
   const isConsortium = values.type === 'Consortium';
 
-  const consortiumEntriesQuery = useOkapiQuery('rsdir/entries?q=type=Consortium', {
+  const consortiumEntriesQuery = useOkapiQuery('rsdir/entries?q=type=Consortium&limit=1000', {
     staleTime: 2 * 60 * 1000,
   });
 

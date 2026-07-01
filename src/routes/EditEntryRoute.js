@@ -23,7 +23,6 @@ const EditEntryRoute = () => {
 
   const op = id ? EDIT : CREATE;
 
-  // const close = useCloseDirect(op === CREATE ? '/rsdir/entries' : `/rsdir/entries/view/${id}`);
   const close = useCloseDirect(op === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}${location.search}`);
 
   const entryQuery = useOkapiQuery(`rsdir/entries/by-id/${id}`, {

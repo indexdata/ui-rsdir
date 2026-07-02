@@ -32,8 +32,6 @@ const DirectoryRoute = ({ match: { path } }) => {
         <Route path={`${path}/entries/tiers/manage/:id`} component={ManageEntryTiersRoute} />
         <Route path={`${path}/entries/tiers/edit/:id`} component={EditEntryTiersRoute} />
       </Route>
-      <Route path={`${path}/networks`} component={NetworksRoute} />
-      <Route path={`${path}/tiers`} component={TiersRoute} />
     </Switch>
   );
 };

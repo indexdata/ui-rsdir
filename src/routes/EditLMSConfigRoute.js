@@ -82,7 +82,7 @@ const EditLMSConfigRoute = () => {
 
   const operation = id ? EDIT : CREATE;
 
-  const close = useCloseDirect(operation === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}${location.search}`);
+  const close = useCloseDirect(operation === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}/edit${location.search}`);
 
   const entryQuery = useOkapiQuery(`rsdir/entries/by-id/${id}`, {
     staleTime: STALE_QUERY_TIME,

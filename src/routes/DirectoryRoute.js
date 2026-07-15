@@ -8,10 +8,10 @@ import EditLMSConfigRoute from './EditLMSConfigRoute';
 import EditEntryNetworksRoute from './EditEntryNetworksRoute';
 import EditEntryTiersRoute from './EditEntryTiersRoute';
 import EntryPointsRoute from './EntryPointsRoute';
+import EntryPointNetworksRoute from './EntryPointNetworksRoute';
+import EntryPointTiersRoute from './EntryPointTiersRoute';
 import ManageEntryNetworksRoute from './ManageEntryNetworksRoute';
 import ManageEntryTiersRoute from './ManageEntryTiersRoute';
-import NetworksRoute from './NetworksRoute';
-import TiersRoute from './TiersRoute';
 
 const DirectoryRoute = ({ match: { path } }) => {
   return (
@@ -24,6 +24,10 @@ const DirectoryRoute = ({ match: { path } }) => {
       <Route path={`${path}/entries`} component={EntriesRoute}>
         <Route path={`${path}/entries/create`} component={EditEntryRoute} />
         <Route path={`${path}/entries/entry-points/:id`} component={EntryPointsRoute} />
+        <Route path={`${path}/entries/entry-points/:id/edit/entry`} component={EditEntryRoute} />
+        <Route path={`${path}/entries/entry-points/:id/edit/lmsconfig`} component={EditLMSConfigRoute} />
+        <Route path={`${path}/entries/entry-points/:id/edit/networks`} component={EntryPointNetworksRoute} />
+        <Route path={`${path}/entries/entry-points/:id/edit/tiers`} component={EntryPointTiersRoute} />
         <Route path={`${path}/entries/view/:id`} component={ViewEntryRoute} />
         <Route path={`${path}/entries/edit/:id`} component={EditEntryRoute} />
         <Route path={`${path}/entries/lmsconfig/edit/:id`} component={EditLMSConfigRoute} />

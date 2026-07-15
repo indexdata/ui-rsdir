@@ -9,6 +9,7 @@ import {
   Col,
   IconButton,
   KeyValue,
+  Modal,
   MultiColumnList,
   Row,
 } from '@folio/stripes/components';
@@ -37,8 +38,8 @@ const EntryOwnedNetworksEditor = ({ id }) => {
   const ky = useOkapiKy();
   const queryClient = useQueryClient();
   const [editingNetwork, setEditingNetwork] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deletingNetworkId, setDeletingNetworkId] = useState();
-  const [formVersion, setFormVersion] = useState(0);
 
   const entryQuery = useOkapiQuery(entryPath(id), {
     staleTime: 2 * 60 * 1000,
@@ -99,7 +100,6 @@ const EntryOwnedNetworksEditor = ({ id }) => {
   const updater = useMutation({
     mutationFn: ({ networkId, modifiedFields }) => ky.patch(networkPath(networkId), { json: modifiedFields }),
     onSuccess: async (_data, variables) => {
-      setEditingNetwork();
       await invalidateNetworkQueries(variables.networkId);
       callout.sendCallout({
         type: 'success',
@@ -135,7 +135,7 @@ const EntryOwnedNetworksEditor = ({ id }) => {
     if (!editingNetwork) {
       return creator.mutateAsync(values).then(() => {
         form.restart(defaultNetworkValues);
-        setFormVersion(current => current + 1);
+        setIsModalOpen(false);
       });
     }
 
@@ -153,7 +153,25 @@ const EntryOwnedNetworksEditor = ({ id }) => {
     return updater.mutateAsync({
       networkId: editingNetwork.id,
       modifiedFields,
+    }).then(() => {
+      setEditingNetwork();
+      setIsModalOpen(false);
     });
+  };
+
+  const openCreateModal = () => {
+    setEditingNetwork();
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = network => {
+    setEditingNetwork(network);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setEditingNetwork();
+    setIsModalOpen(false);
   };
 
   const formatter = {
@@ -164,14 +182,20 @@ const EntryOwnedNetworksEditor = ({ id }) => {
           aria-label={intl.formatMessage({ id: 'ui-rsdir.network.edit.action' })}
           icon="edit"
           id={`clickable-edit-network-${network.id}`}
-          onClick={() => setEditingNetwork(network)}
+          onClick={event => {
+            event.stopPropagation();
+            openEditModal(network);
+          }}
         />
         <IconButton
           aria-label={intl.formatMessage({ id: 'ui-rsdir.networks.delete' })}
           disabled={deleter.isLoading && deletingNetworkId === network.id}
           icon="trash"
           id={`clickable-delete-network-${network.id}`}
-          onClick={() => deleter.mutate(network.id)}
+          onClick={event => {
+            event.stopPropagation();
+            deleter.mutate(network.id);
+          }}
         />
       </>
     ),
@@ -196,50 +220,75 @@ const EntryOwnedNetworksEditor = ({ id }) => {
 
   return (
     <div>
-      <Form
-        key={`${editingNetwork?.id || 'create'}-${formVersion}`}
-        onSubmit={submit}
-        initialValues={editingNetwork ? { ...defaultNetworkValues, ...editingNetwork } : defaultNetworkValues}
-        keepDirtyOnReinitialize
-      >
-        {({ dirty, handleSubmit, pristine, submitting, invalid }) => (
-          <form onSubmit={handleSubmit} id="form-entry-owned-network">
-            <NetworkForm />
-            <Row end="xs">
-              <Col xs={12}>
-                {editingNetwork && (
+      <Row end="xs">
+        <Col xs={12}>
+          <Button
+            buttonStyle="primary"
+            id="clickable-add-entry-owned-network"
+            onClick={openCreateModal}
+          >
+            <FormattedMessage id="ui-rsdir.add" />
+          </Button>
+        </Col>
+      </Row>
+      {isModalOpen && (
+        <Form
+          key={editingNetwork?.id || 'create'}
+          onSubmit={submit}
+          initialValues={editingNetwork ? { ...defaultNetworkValues, ...editingNetwork } : defaultNetworkValues}
+          keepDirtyOnReinitialize
+        >
+          {({ dirty, handleSubmit, pristine, submitting, invalid }) => (
+            <Modal
+              dismissible
+              footer={(
+                <>
                   <Button
                     buttonStyle="default"
                     id="clickable-cancel-entry-owned-network"
-                    onClick={() => setEditingNetwork()}
+                    marginBottom0
+                    onClick={closeModal}
                   >
                     <FormattedMessage id="ui-rsdir.cancel" />
                   </Button>
-                )}
-                <Button
-                  buttonStyle="primary"
-                  disabled={pristine || submitting || invalid}
-                  id="clickable-save-entry-owned-network"
-                  onClick={handleSubmit}
-                  type="submit"
-                >
-                  <FormattedMessage id={editingNetwork ? 'ui-rsdir.edit.submit' : 'ui-rsdir.create'} />
-                </Button>
-              </Col>
-            </Row>
-            <FormattedMessage id="ui-rsdir.confirmDirtyNavigate">
-              {prompt => <Prompt when={dirty && !submitting} message={prompt[0]} />}
-            </FormattedMessage>
-          </form>
-        )}
-      </Form>
+                  <Button
+                    buttonStyle="primary"
+                    disabled={pristine || submitting || invalid}
+                    id="clickable-save-entry-owned-network"
+                    marginBottom0
+                    onClick={handleSubmit}
+                    type="submit"
+                  >
+                    <FormattedMessage id={editingNetwork ? 'ui-rsdir.edit.submit' : 'ui-rsdir.create'} />
+                  </Button>
+                </>
+              )}
+              id="entry-owned-network-modal"
+              label={
+                editingNetwork
+                  ? <FormattedMessage id="ui-rsdir.network.edit" values={{ name: networkLabel(editingNetwork) }} />
+                  : <FormattedMessage id="ui-rsdir.network.create" />
+              }
+              onClose={closeModal}
+              open
+            >
+              <form onSubmit={handleSubmit} id="form-entry-owned-network">
+                <NetworkForm />
+                <FormattedMessage id="ui-rsdir.confirmDirtyNavigate">
+                  {prompt => <Prompt when={dirty && !submitting} message={prompt[0]} />}
+                </FormattedMessage>
+              </form>
+            </Modal>
+          )}
+        </Form>
+      )}
       <MultiColumnList
         contentData={networks}
         formatter={formatter}
         id="entry-owned-networks-list"
         isEmptyMessage={intl.formatMessage({ id: 'ui-rsdir.networks.empty' })}
         loading={networksQuery.isFetching}
-        onRowClick={(_event, network) => setEditingNetwork(network)}
+        onRowClick={(_event, network) => openEditModal(network)}
         visibleColumns={['name', 'actions']}
         columnMapping={{
           name: intl.formatMessage({ id: 'ui-rsdir.networks.current' }),

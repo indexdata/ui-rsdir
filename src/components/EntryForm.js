@@ -44,9 +44,22 @@ const ParentField = () => {
   const form = useForm();
   const { values } = useFormState({ subscription: { values: true } });
   const isConsortium = values.type === 'Consortium';
+  const consortiumEntriesPath = useMemo(() => {
+    const params = new URLSearchParams();
 
-  const consortiumEntriesQuery = useOkapiQuery('rsdir/entries?q=type=Consortium&limit=1000', {
+    /*
+    params.append('q', 'type=Consortium');
+    params.append('limit', '1000');
+    */
+    return `rsdir/entries?${params.toString()}`;
+  }, []);
+
+  const consortiumEntriesQuery = useOkapiQuery(consortiumEntriesPath, {
     staleTime: 2 * 60 * 1000,
+    searchParams: {
+      q: 'type=Consortium',
+      limit: '1000',
+    },
   });
 
   const consortiumEntries = useMemo(

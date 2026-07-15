@@ -36,6 +36,22 @@ const parseNumber = value => {
   return Number.parseFloat(value);
 };
 
+const validateCost = value => {
+  const requiredError = requiredValue(value);
+
+  if (requiredError) {
+    return requiredError;
+  }
+
+  const isCurrencyValue = Number.isFinite(value) &&
+    value >= 0 &&
+    /^\d+(?:\.\d{1,2})?$/.test(String(value));
+
+  return isCurrencyValue
+    ? undefined
+    : <FormattedMessage id="ui-rsdir.tier.cost.invalid" />;
+};
+
 const TierForm = () => {
   return (
     <>
@@ -76,11 +92,12 @@ const TierForm = () => {
             name="cost"
             component={TextField}
             type="number"
-            step="any"
+            min="0"
+            step="0.01"
             parse={parseNumber}
             label={<FormattedMessage id="ui-rsdir.tier.cost" />}
             required
-            validate={requiredValue}
+            validate={validateCost}
           />
         </Col>
       </Row>

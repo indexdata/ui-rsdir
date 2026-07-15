@@ -8,7 +8,7 @@ import EntryTiersEditor from '../components/EntryTiersEditor';
 const EditEntryTiersRoute = () => {
   const { id } = useParams();
   const location = useLocation();
-  const close = useCloseDirect(`/rsdir/entries/entry-points/${id}${location.search}`);
+  const close = useCloseDirect(`/rsdir/entries/entry-points/${id}/edit${location.search}`);
 
   return (
     <Pane

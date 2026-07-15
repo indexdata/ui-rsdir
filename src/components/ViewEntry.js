@@ -15,7 +15,12 @@ import {
 } from '@folio/stripes/components';
 import { useCloseDirect, upNLevels, useOkapiQuery } from '@projectreshare/stripes-reshare';
 
-const ViewEntry = ({ entry, closePath, isEmbedded = false }) => {
+const ViewEntry = ({
+  entry,
+  closePath,
+  isEmbedded = false,
+  showActions = true,
+}) => {
   const location = useLocation();
   const history = useHistory();
   const intl = useIntl();
@@ -32,18 +37,6 @@ const ViewEntry = ({ entry, closePath, isEmbedded = false }) => {
 
   const handleLMSEdit = () => {
     history.push(`/rsdir/entries/lmsconfig/edit/${entry.id}${location.search}`);
-  };
-
-  const handleNetworksEdit = () => {
-    history.push(`/rsdir/entries/networks/edit/${entry.id}${location.search}`);
-  };
-
-  const handleTiersEdit = () => {
-    const tiersPath = entry.type === 'Consortium'
-      ? `/rsdir/entries/tiers/manage/${entry.id}`
-      : `/rsdir/entries/tiers/edit/${entry.id}`;
-
-    history.push(`${tiersPath}${location.search}`);
   };
 
   const formatSymbols = (symbols) => {
@@ -82,7 +75,7 @@ const ViewEntry = ({ entry, closePath, isEmbedded = false }) => {
             <FormattedMessage id="ui-rsdir.lmsConfig.header" />
           </Headline>
         }
-        headerEnd={
+        headerEnd={showActions &&
           <Button
             id="clickable-edit-entry-lmsconfig"
             onClick={handleLMSEdit}
@@ -407,7 +400,7 @@ const ViewEntry = ({ entry, closePath, isEmbedded = false }) => {
       paneTitle={entry.name || intl.formatMessage({ id: 'ui-rsdir.entries.info' })}
       onClose={close}
       dismissible
-      lastMenu={
+      lastMenu={showActions &&
         <PaneMenu>
           <Button
             id="clickable-edit-entry"

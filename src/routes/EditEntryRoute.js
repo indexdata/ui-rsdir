@@ -4,7 +4,7 @@ import { Form } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { useMutation, useQueryClient } from 'react-query';
 import { Prompt, useParams, useHistory, useLocation } from 'react-router-dom';
-import { Button, Pane, Paneset, PaneFooter, KeyValue } from '@folio/stripes/components';
+import { Button, Pane, PaneFooter, KeyValue } from '@folio/stripes/components';
 import { CalloutContext, useOkapiKy } from '@folio/stripes/core';
 import { useCloseDirect, useOkapiQuery } from '@projectreshare/stripes-reshare';
 import EntryForm from '../components/EntryForm';
@@ -23,7 +23,7 @@ const EditEntryRoute = () => {
 
   const op = id ? EDIT : CREATE;
 
-  const close = useCloseDirect(op === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}${location.search}`);
+  const close = useCloseDirect(op === CREATE ? `/rsdir/entries${location.search}` : `/rsdir/entries/entry-points/${id}/edit${location.search}`);
 
   const entryQuery = useOkapiQuery(`rsdir/entries/by-id/${id}`, {
     staleTime: 2 * 60 * 1000,
@@ -136,36 +136,34 @@ const EditEntryRoute = () => {
   };
 
   return (
-    <Paneset>
-      <Form
-        onSubmit={submit}
-        initialValues={initialValues}
-        mutators={{ ...arrayMutators }}
-        keepDirtyOnReinitialize
-      >
-        {({ handleSubmit, pristine, submitting, submitSucceeded, invalid }) => (
-          <Pane
-            defaultWidth="100%"
-            centerContent
-            onClose={close}
-            dismissible
-            footer={getFooter(handleSubmit, pristine, submitting, invalid)}
-            paneTitle={
-              op === CREATE
-                ? <FormattedMessage id="ui-rsdir.createEntry" />
-                : <FormattedMessage id="ui-rsdir.editEntry" values={{ name: initialValues.name }} />
-            }
-          >
-            <form onSubmit={handleSubmit} id="form-entry">
-              <EntryForm />
-            </form>
-            <FormattedMessage id="ui-rsdir.confirmDirtyNavigate">
-              {prompt => <Prompt when={!pristine && !(submitting || submitSucceeded)} message={prompt[0]} />}
-            </FormattedMessage>
-          </Pane>
-        )}
-      </Form>
-    </Paneset>
+    <Form
+      onSubmit={submit}
+      initialValues={initialValues}
+      mutators={{ ...arrayMutators }}
+      keepDirtyOnReinitialize
+    >
+      {({ handleSubmit, pristine, submitting, submitSucceeded, invalid }) => (
+        <Pane
+          defaultWidth="fill"
+          centerContent
+          onClose={close}
+          dismissible
+          footer={getFooter(handleSubmit, pristine, submitting, invalid)}
+          paneTitle={
+            op === CREATE
+              ? <FormattedMessage id="ui-rsdir.createEntry" />
+              : <FormattedMessage id="ui-rsdir.editEntry" values={{ name: initialValues.name }} />
+          }
+        >
+          <form onSubmit={handleSubmit} id="form-entry">
+            <EntryForm />
+          </form>
+          <FormattedMessage id="ui-rsdir.confirmDirtyNavigate">
+            {prompt => <Prompt when={!pristine && !(submitting || submitSucceeded)} message={prompt[0]} />}
+          </FormattedMessage>
+        </Pane>
+      )}
+    </Form>
   );
 };
 

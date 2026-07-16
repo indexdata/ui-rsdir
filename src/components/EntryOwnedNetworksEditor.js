@@ -176,6 +176,7 @@ const EntryOwnedNetworksEditor = ({ id }) => {
 
   const formatter = {
     name: network => networkLabel(network),
+    priority: network => network.priority,
     actions: network => (
       <>
         <IconButton
@@ -289,9 +290,10 @@ const EntryOwnedNetworksEditor = ({ id }) => {
         isEmptyMessage={intl.formatMessage({ id: 'ui-rsdir.networks.empty' })}
         loading={networksQuery.isFetching}
         onRowClick={(_event, network) => openEditModal(network)}
-        visibleColumns={['name', 'actions']}
+        visibleColumns={['name', 'priority', 'actions']}
         columnMapping={{
           name: intl.formatMessage({ id: 'ui-rsdir.networks.current' }),
+          priority: intl.formatMessage({ id: 'ui-rsdir.network.priority' }),
           actions: '',
         }}
       />

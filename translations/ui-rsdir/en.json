@@ -54,6 +54,7 @@
   "address.componentType.other" : "Other",
   "lmsConfig.header" : "LMS Config",
   "lmsConfig.edit" : "Edit LMS Config",
+  "lmsConfig.edit.success" : "LMS configuration updated successfully",
   "lmsConfig.address" : "Address",
   "lmsConfig.fromAgency" : "From Agency",
   "lmsConfig.toAgency" : "To Agency",

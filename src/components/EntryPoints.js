@@ -36,6 +36,7 @@ const EntryPoints = ({ id }) => {
   const isEditTab = location.pathname.startsWith(editBasePath);
   const tiersPath = `${editBasePath}/tiers`;
   const networksPath = `${editBasePath}/networks`;
+  const activeLink = `${location.pathname}${location.search}`;
 
   const setViewTab = () => {
     history.push(`${basePath}${location.search}`);
@@ -86,11 +87,10 @@ const EntryPoints = ({ id }) => {
       }
       {isEditTab &&
         <NavList aria-label={title}>
-          <NavListSection activeLink="entry" striped>
+          <NavListSection activeLink={activeLink} striped>
             <NavListItem
               id="clickable-entry-point-edit"
               to={`${editBasePath}/entry${location.search}`}
-              href="#entry"
             >
               <FormattedMessage id="ui-rsdir.entryPoints.section.entry" />
             </NavListItem>

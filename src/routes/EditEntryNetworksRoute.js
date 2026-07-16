@@ -8,7 +8,7 @@ import EntryNetworksEditor from '../components/EntryNetworksEditor';
 const EditEntryNetworksRoute = () => {
   const { id } = useParams();
   const location = useLocation();
-  const close = useCloseDirect(`/rsdir/entries/entry-points/${id}${location.search}`);
+  const close = useCloseDirect(`/rsdir/entries/entry-points/${id}/edit${location.search}`);
 
   return (
     <Pane
